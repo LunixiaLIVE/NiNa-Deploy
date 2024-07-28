@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "SEOZbaaF0yDydRs9uJgSCaUAr/qTw1ZS7nGEYkBBHtk65x61F0O/K+GW5ECcJnBxKBlpOMq6Juj4qPkAiJ+kNw==",
+  "success": true,
+  "projectFilePath": "R:\\4.Code_Repo\\C#\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lunix\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\Lunix\\.nuget\\packages\\system.management\\8.0.0\\system.management.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,6 @@
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\obj\Debug\net8.0-windows\NiNa-Deploy.csproj.AssemblyReference.cache
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\obj\Debug\net8.0-windows\NiNa_Deploy.AppForm.resources
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\obj\Debug\net8.0-windows\NiNa_Deploy.Properties.Resources.resources
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\obj\Debug\net8.0-windows\NiNa-Deploy.csproj.GenerateResource.cache
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\obj\Debug\net8.0-windows\NiNa-Deploy.GeneratedMSBuildEditorConfig.editorconfig
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\obj\Debug\net8.0-windows\NiNa-Deploy.csproj.CoreCompileInputs.cache
