@@ -1,0 +1,11 @@
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\NiNa-Deploy.exe
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\Resources\AuthorInfo.txt
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\Resources\Ninja.ico
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\Resources\PsExec64.exe
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\NiNa-Deploy.dll
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\NiNa-Deploy.deps.json
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\NiNa-Deploy.runtimeconfig.json
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\NiNa-Deploy.dll.config
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\NiNa-Deploy.pdb
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\System.Management.dll
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\publish\runtimes\win\lib\net8.0\System.Management.dll

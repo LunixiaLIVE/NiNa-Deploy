@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using NiNa_Deploy.Properties;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Runtime.Intrinsics.Arm;
+using System.Net;
+using System.Security;
 
 
 namespace NiNa_Deploy
@@ -18,50 +21,70 @@ namespace NiNa_Deploy
         public AppForm()
         {
             InitializeComponent();
+            this.Icon = new Icon($@"{Directory.GetCurrentDirectory()}\Resources\Ninja.ico");
+
             toolStripStatusLabel_1.Text = Utility.listStatus[0];
-            if (System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName.ToUpper().Contains("USAF.MIL"))
+
+            foreach (String Domains in Settings.Default.Domains.Split("\r\n"))
             {
-                this.Text += $" {Utility.strVersion} | UNCLASSIFIED/CUI | NIPRNET | " + Environment.UserDomainName + " | " + Environment.UserName;
+                if (IPGlobalProperties.GetIPGlobalProperties().DomainName.ToUpper().Contains(Domains.Split("|")[0].ToString()))
+                {
+                    this.Text += $" {Utility.strVersion} | {Domains.Split("|")[1]} | {Domains.Split("|")[2]} | " + Environment.UserDomainName + " | " + Environment.UserName;
+                    break;
+                }
             }
-            else if (Environment.UserDomainName.ToUpper().Contains("SMIL.MIL"))
-            {
-                this.Text += $" {Utility.strVersion} | CLASSIFIED/SECRET | SIPRNET | " + Environment.UserDomainName + " | " + Environment.UserName;
-            }
-            else
+
+            if (!this.Text.Contains(Utility.strVersion))
             {
                 this.Text += $" {Utility.strVersion} | UNCLASSIFIED | PUBLIC | " + Environment.UserDomainName + " | " + Environment.UserName;
             }
+
+            Application.DoEvents();
             cb_FileExtensions.Items.Clear();
-            foreach (String ext in Properties.Settings.Default.FileExtensions)
+            foreach (String ext in Settings.Default.FileExtensions.Split("\r\n"))
             {
                 cb_FileExtensions.Items.Add(ext.Split("|")[0]);
             }
-            tb_RemoteTempFolder.Text = Properties.Settings.Default.TempLocation;
-            lb_TotalComputers.Text = String.Empty;
+            tb_RemoteTempFolder.Text = Settings.Default.TempLocation;
             toolStripStatusLabel_1.Text = Utility.listStatus[0];
-            num_PingTimeout.Value = Properties.Settings.Default.PingTimeout;
-            tb_PsExecLocation.Text = Properties.Settings.Default.PsExecLocation;
-            num_MaxThreads.Value = Properties.Settings.Default.MaxPsExecProcs;
-            num_TimeBetweenThreads.Value = Properties.Settings.Default.PsExecInterval;
-            chk_PsExec_System.Checked = Properties.Settings.Default.PsExecAsSystem;
+            num_PingTimeout.Value = Settings.Default.PingTimeout;
 
+            if (File.Exists($@"{Directory.GetCurrentDirectory()}\Resources\PsExec64.exe"))
+            {
+                tb_PsExecLocation.Text = $@"{Directory.GetCurrentDirectory()}\Resources\PsExec64.exe";
+            }
+            else
+            {
+                tb_PsExecLocation.Text = Settings.Default.PsExecLocation;
+            }
+
+            num_MaxThreads.Value = Settings.Default.MaxThreads;
+            num_TimeBetweenThreads.Value = Settings.Default.ThreadInterval;
+            chk_PsExec_System.Checked = Settings.Default.PsExecAsSystem;
             lbl_MonitoringThreads.Text = Utility.MonitoringThreadList.Count.ToString();
-
             ToolTip tip = new() { ShowAlways = true };
 
             tip.SetToolTip(this.chk_PsExec_System, "Option for PsExec to execute in the context of the 'NT Authority\\SYSTEM account on the remote system.");
             tip.SetToolTip(this.chk_PsExecRemoteInteractive, "Option for PsExec to execute interactively with the current logged-on user. Useful for popups.");
-            
+
             tip.SetToolTip(this.num_TimeBetweenThreads, "How long to wait (in milliseconds) between starting each remote thread.");
             tip.SetToolTip(this.num_MaxThreads, "Number of maximum remote threads.");
+            tip.SetToolTip(this.btn_ImportList, "Import a list of hostnames/IP addresses from a text file (1 item per line)");
+            tip.SetToolTip(this.btn_RemoveSelected, "Removes selected items from the Computer List.");
+            tip.SetToolTip(this.btn_ClearAll, "Clears Computer List");
+            tip.SetToolTip(this.btbn_SetTempFolder, "Set a temp folder. The same folder path will be used on the remote system.");
+            tip.SetToolTip(this.btn_LocatePackage, "Locate a file/script to deploy to remote systems.");
+            tip.SetToolTip(this.btn_AddTarget, "Adds target hostname/IP from Target Computer to the Computer List");
+            tip.SetToolTip(this.btn_RefeshCommandLine, "[Re]Generates commandline based on items 1-5");
+            tip.SetToolTip(this.num_PingTimeout, "How long to wait before ping will time out.");
+            tip.SetToolTip(this.btn_AbortThreads, "Cancels operation and kills all running threads.");
+            tip.SetToolTip(this.chk_FailOnWMIError, "Terminates thread if WMI fails to connect.");
 
             Thread t = new(ContinuousDoEvents) { Name = "ContinuousDoEvents" };
             t.Start();
             Utility.MonitoringThreadList.Add(t);
             Application.DoEvents();
         }
-
- 
 
         void ContinuousDoEvents()
         {
@@ -74,7 +97,7 @@ namespace NiNa_Deploy
 
         private void UpdateLabel_MonitoringThreads()
         {
-            
+
             lbl_MonitoringThreads.Text = $"\r\n" +
                                          $"{Utility.RemoteThreadList.Count + Utility.MonitoringThreadList.Count}\r\n" +
                                          $"{Utility.MonitoringThreadList.Count}\r\n" +
@@ -106,17 +129,16 @@ namespace NiNa_Deploy
             {
                 foreach (String item in File.ReadAllText(ofd.FileName).ToString().Split("\r\n").ToArray())
                 {
-                    if(item.Length > 0)
+                    if (item.Length > 0)
                     {
                         list_TargetComputers.Items.Add(item);
                     }
                 }
                 Application.DoEvents();
             }
-            lb_TotalComputers.Text = list_TargetComputers.Items.Count.ToString();
+            gb_ComputerList.Text = $"Computer List {list_TargetComputers.Items.Count}";
             Application.DoEvents();
         }
-
         private void btn_RemoveSelected_Click(object sender, EventArgs e)
         {
             ListBox.SelectedObjectCollection selectedItems = list_TargetComputers.SelectedItems;
@@ -127,14 +149,14 @@ namespace NiNa_Deploy
                     list_TargetComputers.Items.Remove(selectedItems[i]);
                 }
             }
-            lb_TotalComputers.Text = list_TargetComputers.Items.Count.ToString();
+            gb_ComputerList.Text = $"Computer List {list_TargetComputers.Items.Count}";
             Application.DoEvents();
         }
 
         private void btn_ClearAll_Click(object sender, EventArgs e)
         {
             list_TargetComputers.Items.Clear();
-            lb_TotalComputers.Text = "0";
+            gb_ComputerList.Text = $"Computer List {list_TargetComputers.Items.Count}";
             Application.DoEvents();
         }
 
@@ -151,10 +173,9 @@ namespace NiNa_Deploy
                 tb_PackageLocation.Text = ofd.FileName;
             }
         }
-
         private void cb_FileExtensions_SelectedValueChanged(object sender, EventArgs e)
         {
-            foreach (String ext in Properties.Settings.Default.FileExtensions)
+            foreach (String ext in Properties.Settings.Default.FileExtensions.Split("\r\n"))
             {
                 if (cb_FileExtensions.Text == ext.Split("|")[0])
                 {
@@ -163,7 +184,6 @@ namespace NiNa_Deploy
                 }
             }
         }
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new();
@@ -174,7 +194,6 @@ namespace NiNa_Deploy
             MessageBox.Show($"{sb}" +
                             $"Version: {Utility.strVersion}", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
         private void DoThreadThings(String strComputer)
         {
             Console.WriteLine($"Remote Thread started for: {strComputer}");
@@ -202,17 +221,17 @@ namespace NiNa_Deploy
             PingOptions pingOptions = new(64, true);
             byte[] buffer = Encoding.ASCII.GetBytes("00000000000000000000000000000000");
 
-            try 
-            { 
+            try
+            {
                 PingReply pingReply = ping.Send(strComputer, (int)Math.Floor(num_PingTimeout.Value), buffer, pingOptions);
                 ErrorCode = pingReply.Status.ToString();
             }
-            catch(PingException e)
+            catch (PingException e)
             {
                 ErrorCode = e.Message.ToString();
             }
 
-            for(int i = 0; i < Utility.RemoteProcessesResults.Rows.Count; i++)
+            for (int i = 0; i < Utility.RemoteProcessesResults.Rows.Count; i++)
             {
                 if (Utility.RemoteProcessesResults.Rows[i]["RemoteHost"].ToString() == strComputer)
                 {
@@ -275,7 +294,15 @@ namespace NiNa_Deploy
                         Utility.RemoteProcessesResults.Rows[i]["CMD"] = "Fail:WMI";
                         Utility.RemoteProcessesResults.Rows[i]["PID"] = "Fail:WMI";
                         Utility.RemoteProcessesResults.Rows[i]["ExitCode"] = "Fail:WMI";
-                        return;
+                        if (Utility.AbortOnWMIFail)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        
                     }
                     Utility.RemoteProcessesResults.Rows[i]["WMICode"] = "Success";
                 }
@@ -370,10 +397,7 @@ namespace NiNa_Deploy
                     Utility.RemoteProcessesResults.Rows[i]["PID"] = p.Id.ToString();
                 }
             }
-            while (!p.HasExited)
-            {
-                Thread.Sleep(500);
-            }
+            while (!p.HasExited) { Thread.Sleep(500); }
             for (int i = 0; i < Utility.RemoteProcessesResults.Rows.Count; i++)
             {
                 if (Utility.RemoteProcessesResults.Rows[i]["RemoteHost"].ToString() == strComputer)
@@ -388,13 +412,7 @@ namespace NiNa_Deploy
             ///
             if (File.Exists($@"{rD}\{fN}"))
             {
-                try
-                {
-                    File.Delete($@"{rD}\{fN}");
-                }
-                catch
-                {
-                }
+                try { File.Delete($@"{rD}\{fN}"); } catch { }
             }
             return;
         }
@@ -403,27 +421,11 @@ namespace NiNa_Deploy
         {
             if (!tb_PsExecLocation.Text.ToUpper().Contains("PSEXEC"))
             {
-                MessageBox.Show("You are missing the PsExec File (required). Configure the location for PsExec in the 'Config' section.", "PsExec Missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                MessageBox.Show("You are missing the PsExec File (required). Configure the location for PsExec in the 'Config' section.", "PsExec Missing", MessageBoxButtons.OK, MessageBoxIcon.Information); return;
             }
-
-            if(tb_CommandLine.Text == String.Empty || tb_CommandLine.Text == null || tb_CommandLine.Text.Length == 0)
-            {
-                return;
-            }
-
-            if (list_TargetComputers.Items.Count == 0 && txt_TargetComputer.Text == String.Empty)
-            {
-                return;
-            }
-
-            if (list_TargetComputers.Items.Count == 0 && txt_TargetComputer.Text != String.Empty)
-            {
-                list_TargetComputers.Items.Add(txt_TargetComputer.Text);
-            }
-
-            lb_TotalComputers.Text = list_TargetComputers.Items.Count.ToString();
-
+            if (tb_CommandLine.Text == String.Empty || tb_CommandLine.Text == null || tb_CommandLine.Text.Length == 0) { return; }
+            if (list_TargetComputers.Items.Count == 0 && txt_TargetComputer.Text == String.Empty) { return; }
+            if (list_TargetComputers.Items.Count == 0 && txt_TargetComputer.Text != String.Empty) { list_TargetComputers.Items.Add(txt_TargetComputer.Text); }
             DialogResult dr = MessageBox.Show($"Are you sure you want to execute\r\n\r\n" +
                                               $"{tb_CommandLine.Text}\r\n\r\n" +
                                               $"on\r\n\r\n" +
@@ -431,27 +433,34 @@ namespace NiNa_Deploy
                                               $"Yes/No", "Verify", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (dr == DialogResult.No) { return; }
 
+            Utility.Abort = false;
             tabControl1.SelectTab(1);
+            tabControl2.SelectTab(1);
             Application.DoEvents();
-
             Utility.RemoteProcessesResults = Utility.GenerateRemoteProcessesTable();
             Utility.SleepTimeBetweenThreads = (int)num_TimeBetweenThreads.Value;
             Utility.RemoteThreadList.Clear();
             Utility.MaxThreads = (int)num_MaxThreads.Value;
             Utility.TotalThreadsCreated = 0;
             dataGridView_Table.DataSource = Utility.RemoteProcessesResults;
-
             toolStripProgressBar_1.Style = ProgressBarStyle.Continuous;
             toolStripProgressBar_1.Enabled = true;
             toolStripProgressBar_1.Visible = true;
             toolStripProgressBar_1.Maximum = list_TargetComputers.Items.Count;
             toolStripProgressBar_1.Minimum = 0;
-
             foreach (String strComputer in list_TargetComputers.Items)
             {
-                while (Utility.RemoteThreadList.Count >= Utility.MaxThreads)
+                if (Utility.Abort)
+                {
+                    toolStripStatusLabel_1.Text = $"{Utility.listStatus[0]}";
+                    GC.Collect();
+                    Application.DoEvents();
+                    return;
+                }
+                while (Utility.RemoteThreadList.Count >= Utility.MaxThreads && !Utility.Abort)
                 {
                     Utility.RemoteThreadList.RemoveAll(t => t.IsAlive == false);
+                    GC.Collect();
                     Thread.Sleep(100);
                     Application.DoEvents();
                 }
@@ -463,17 +472,27 @@ namespace NiNa_Deploy
 
                 toolStripStatusLabel_1.Text = $"Creating Thread for {strComputer} : {Utility.TotalThreadsCreated} of {list_TargetComputers.Items.Count}";
                 toolStripProgressBar_1.Value = Utility.TotalThreadsCreated;
-
+                GC.Collect();
                 Application.DoEvents();
             }
+
+            if (Utility.Abort) 
+            { 
+                toolStripStatusLabel_1.Text = $"{Utility.listStatus[0]}";
+                GC.Collect();
+                Application.DoEvents();
+                return; 
+            }
+
             Application.DoEvents();
             toolStripProgressBar_1.Style = ProgressBarStyle.Marquee;
             toolStripProgressBar_1.MarqueeAnimationSpeed = 100;
             toolStripStatusLabel_1.Text = $"Waiting for remaining threads to complete.";
             Application.DoEvents();
-            while (Utility.RemoteThreadList.Count > 0)
+            while (Utility.RemoteThreadList.Count > 0 && !Utility.Abort)
             {
                 Utility.RemoteThreadList.RemoveAll(t => t.IsAlive == false);
+                GC.Collect();
                 Thread.Sleep(100);
                 Application.DoEvents();
             }
@@ -481,24 +500,20 @@ namespace NiNa_Deploy
             toolStripProgressBar_1.Value = 0;
             Application.DoEvents();
             toolStripStatusLabel_1.Text = $"{Utility.listStatus[0]}";
+            GC.Collect();
         }
 
         private void argumentsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
                 $"Examples of arguments both Prepended and Appended\r\n\r\n" +
-
                 $"1)\r\n" +
                 $"/I #PACKAGE /quiet /norestart\r\n\r\n" +
-
                 $"2){Environment.NewLine}" +
                 $"#PACKAGE /quiet /norestart\r\n\r\n" +
-
                 $"3)\r\n" +
                 $"Formatting the Argument Box\r\n\r\n" +
-
                 $"#PACKAGE is a placeholder and must be present in the Arguments Box as shown above.",
-
                 "How-To Arugments", MessageBoxButtons.OK, MessageBoxIcon.Information
             );
             GC.Collect();
@@ -524,8 +539,8 @@ namespace NiNa_Deploy
 
         private void num_PingTimeout_ValueChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.PingTimeout = (int)num_PingTimeout.Value;
-            Properties.Settings.Default.Save();
+            Settings.Default.PingTimeout = (int)num_PingTimeout.Value;
+            Settings.Default.Save();
             GC.Collect();
         }
 
@@ -549,8 +564,8 @@ namespace NiNa_Deploy
         private void num_MaxPsExecProcs_ValueChanged(object sender, EventArgs e)
         {
             Utility.MaxThreads = (int)num_MaxThreads.Value;
-            Properties.Settings.Default.MaxPsExecProcs = (int)num_MaxThreads.Value;
-            Properties.Settings.Default.Save();
+            Settings.Default.MaxThreads = (int)num_MaxThreads.Value;
+            Settings.Default.Save();
             GC.Collect();
         }
 
@@ -571,21 +586,64 @@ namespace NiNa_Deploy
 
         private void num_TimeBetweenProcs_ValueChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.PsExecInterval = (int)num_TimeBetweenThreads.Value;
-            Properties.Settings.Default.Save();
+            Settings.Default.ThreadInterval = (int)num_TimeBetweenThreads.Value;
+            Settings.Default.Save();
             GC.Collect();
         }
 
         private void chk_PsExec_System_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.PsExecAsSystem = chk_PsExec_System.Checked;
-            Properties.Settings.Default.Save();
+            Settings.Default.PsExecAsSystem = chk_PsExec_System.Checked;
+            Settings.Default.Save();
             GC.Collect();
         }
 
         private void AppForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void btn_AddTarget_Click(object sender, EventArgs e)
+        {
+            if (txt_TargetComputer.Text != String.Empty && txt_TargetComputer.Text != null)
+            {
+                list_TargetComputers.Items.Add(txt_TargetComputer.Text);
+                gb_ComputerList.Text = $"Computer List {list_TargetComputers.Items.Count}";
+                txt_TargetComputer.Clear();
+            }
+        }
+
+        private void btbn_SetTempFolder_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (Directory.Exists(dialog.SelectedPath) && !String.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    tb_RemoteTempFolder.Text = dialog.SelectedPath;
+                    Settings.Default.TempLocation = dialog.SelectedPath;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        private void btn_AbortThreads_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Abort all threads? Doing so will restart the application.", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (result == DialogResult.OK)
+            {
+                foreach (Thread t in Utility.RemoteThreadList)
+                {
+                    Application.Restart();
+                }
+                Utility.RemoteThreadList.Clear();
+            }
+        }
+
+        private void chk_FailOnWMIError_CheckedChanged(object sender, EventArgs e)
+        {
+            Utility.AbortOnWMIFail = chk_FailOnWMIError.Checked;
         }
     }
 }

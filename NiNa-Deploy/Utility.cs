@@ -8,11 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 using System.Runtime.CompilerServices;
+using System.Security;
 
 namespace NiNa_Deploy
 {
     public static class Utility
     {
+        internal static bool AbortOnWMIFail = false;
+        internal static bool Abort = false;
         internal static bool TableLocked = false;
         internal static readonly String strVersion = "1.2";
         internal static int MaxThreads = 0;
@@ -58,7 +61,7 @@ namespace NiNa_Deploy
             {
                 Impersonation = ImpersonationLevel.Impersonate,
                 EnablePrivileges = true,
-                Timeout = TimeSpan.FromMilliseconds(Properties.Settings.Default.PingTimeout)
+                Timeout = TimeSpan.FromMilliseconds(Properties.Settings.Default.PingTimeout)  
             };
             ManagementScope managementScope = new($"\\\\{strComputer}\\root\\cimv2", options);
             try

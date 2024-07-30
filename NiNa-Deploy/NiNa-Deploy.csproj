@@ -8,18 +8,19 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <StartupObject>NiNa_Deploy.Program</StartupObject>
-    <ApplicationIcon>AirForcePortal.ico</ApplicationIcon>
   <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
   <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>  
   <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
   <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
   <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-  <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>  
+  <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+  <ApplicationIcon>Resources\AirForcePortal.ico</ApplicationIcon>
+  <Version>1.0.2</Version>  
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="AirForcePortal.ico" />
+    <Content Include="Resources\AirForcePortal.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,14 +51,17 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Resources\AuthorInfo.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
+    <None Update="Resources\Ninja.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\PsExec64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

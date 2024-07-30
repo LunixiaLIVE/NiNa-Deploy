@@ -25,23 +25,20 @@ namespace NiNa_Deploy.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <string>.bat|cmd.exe|</string>
-  <string>.cab|dism.exe|/online /add-package /packagepath:#PACKAGE</string>
-  <string>.cmd|cmd.exe|/C #PACKAGE</string>
-  <string>.exe||</string>
-  <string>.msi|msiexec.exe|/i #PACKAGE /quiet /norestart</string>
-  <string>.msp|msiexec.exe|/p #PACKAGE /quiet /norestart</string>
-  <string>.msu|wusa.exe|#PACKAGE /quiet /norestart</string>
-  <string>.ps1|powershell.exe|-file #PACKAGE -verb runas</string>
-  <string>.reg|reg32.exe|/s #PACKAGE</string>
-  <string>.vbs|cscript.exe|#PACKAGE</string>
-  <string>Custom</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection FileExtensions {
+        [global::System.Configuration.DefaultSettingValueAttribute(@".bat|cmd.exe|
+.cab|dism.exe|/online /add-package /packagepath:#PACKAGE
+.cmd|cmd.exe|/C #PACKAGE
+.exe||
+.msi|msiexec.exe|/i #PACKAGE /quiet /norestart
+.msp|msiexec.exe|/p #PACKAGE /quiet /norestart
+.msu|wusa.exe|#PACKAGE /quiet /norestart
+.ps1|powershell.exe|-file #PACKAGE -verb runas -ExecutionPolicy Bypass
+.reg|reg32.exe|/s #PACKAGE
+.vbs|cscript.exe|#PACKAGE
+Custom")]
+        public string FileExtensions {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["FileExtensions"]));
+                return ((string)(this["FileExtensions"]));
             }
             set {
                 this["FileExtensions"] = value;
@@ -87,24 +84,24 @@ namespace NiNa_Deploy.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int MaxPsExecProcs {
+        public int MaxThreads {
             get {
-                return ((int)(this["MaxPsExecProcs"]));
+                return ((int)(this["MaxThreads"]));
             }
             set {
-                this["MaxPsExecProcs"] = value;
+                this["MaxThreads"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("500")]
-        public int PsExecInterval {
+        public int ThreadInterval {
             get {
-                return ((int)(this["PsExecInterval"]));
+                return ((int)(this["ThreadInterval"]));
             }
             set {
-                this["PsExecInterval"] = value;
+                this["ThreadInterval"] = value;
             }
         }
         
@@ -117,6 +114,18 @@ namespace NiNa_Deploy.Properties {
             }
             set {
                 this["PsExecAsSystem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("USAF.MIL|UNCLASSIFIED/CUI|NIPRNET\r\nSMIL.MIL|CLASSIFIED/SECRET/SIPRNET")]
+        public string Domains {
+            get {
+                return ((string)(this["Domains"]));
+            }
+            set {
+                this["Domains"] = value;
             }
         }
     }

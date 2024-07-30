@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "R:\\4.Code_Repo\\C#\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj": {}
+    "C:\\SourceCode\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj": {}
   },
   "projects": {
-    "R:\\4.Code_Repo\\C#\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj": {
-      "version": "1.0.0",
+    "C:\\SourceCode\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj": {
+      "version": "1.0.2",
       "restore": {
-        "projectUniqueName": "R:\\4.Code_Repo\\C#\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj",
+        "projectUniqueName": "C:\\SourceCode\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj",
         "projectName": "NiNa-Deploy",
-        "projectPath": "R:\\4.Code_Repo\\C#\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj",
-        "packagesPath": "C:\\Users\\Lunix\\.nuget\\packages\\",
-        "outputPath": "R:\\4.Code_Repo\\C#\\NiNa-Deploy\\NiNa-Deploy\\obj\\",
+        "projectPath": "C:\\SourceCode\\NiNa-Deploy\\NiNa-Deploy\\NiNa-Deploy.csproj",
+        "packagesPath": "C:\\Users\\1175556369A\\.nuget\\packages\\",
+        "outputPath": "C:\\SourceCode\\NiNa-Deploy\\NiNa-Deploy\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Lunix\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\1175556369A\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -39,6 +39,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -69,7 +74,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

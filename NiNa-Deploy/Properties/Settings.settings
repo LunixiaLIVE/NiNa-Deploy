@@ -2,21 +2,18 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NiNa_Deploy.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="FileExtensions" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;string&gt;.bat|cmd.exe|&lt;/string&gt;
-  &lt;string&gt;.cab|dism.exe|/online /add-package /packagepath:#PACKAGE&lt;/string&gt;
-  &lt;string&gt;.cmd|cmd.exe|/C #PACKAGE&lt;/string&gt;
-  &lt;string&gt;.exe||&lt;/string&gt;
-  &lt;string&gt;.msi|msiexec.exe|/i #PACKAGE /quiet /norestart&lt;/string&gt;
-  &lt;string&gt;.msp|msiexec.exe|/p #PACKAGE /quiet /norestart&lt;/string&gt;
-  &lt;string&gt;.msu|wusa.exe|#PACKAGE /quiet /norestart&lt;/string&gt;
-  &lt;string&gt;.ps1|powershell.exe|-file #PACKAGE -verb runas&lt;/string&gt;
-  &lt;string&gt;.reg|reg32.exe|/s #PACKAGE&lt;/string&gt;
-  &lt;string&gt;.vbs|cscript.exe|#PACKAGE&lt;/string&gt;
-  &lt;string&gt;Custom&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
+    <Setting Name="FileExtensions" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.bat|cmd.exe|
+.cab|dism.exe|/online /add-package /packagepath:#PACKAGE
+.cmd|cmd.exe|/C #PACKAGE
+.exe||
+.msi|msiexec.exe|/i #PACKAGE /quiet /norestart
+.msp|msiexec.exe|/p #PACKAGE /quiet /norestart
+.msu|wusa.exe|#PACKAGE /quiet /norestart
+.ps1|powershell.exe|-file #PACKAGE -verb runas -ExecutionPolicy Bypass
+.reg|reg32.exe|/s #PACKAGE
+.vbs|cscript.exe|#PACKAGE
+Custom</Value>
     </Setting>
     <Setting Name="TempLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Windows\Temp\NiNa</Value>
@@ -27,14 +24,18 @@
     <Setting Name="PsExecLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MaxPsExecProcs" Type="System.Int32" Scope="User">
+    <Setting Name="MaxThreads" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="PsExecInterval" Type="System.Int32" Scope="User">
+    <Setting Name="ThreadInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
     </Setting>
     <Setting Name="PsExecAsSystem" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Domains" Type="System.String" Scope="User">
+      <Value Profile="(Default)">USAF.MIL|UNCLASSIFIED/CUI|NIPRNET
+SMIL.MIL|CLASSIFIED/SECRET/SIPRNET</Value>
     </Setting>
   </Settings>
 </SettingsFile>

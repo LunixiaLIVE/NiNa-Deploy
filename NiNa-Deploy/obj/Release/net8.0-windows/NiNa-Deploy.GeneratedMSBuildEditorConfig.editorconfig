@@ -14,6 +14,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = NiNa_Deploy
-build_property.ProjectDir = R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\
+build_property.ProjectDir = C:\SourceCode\NiNa-Deploy\NiNa-Deploy\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

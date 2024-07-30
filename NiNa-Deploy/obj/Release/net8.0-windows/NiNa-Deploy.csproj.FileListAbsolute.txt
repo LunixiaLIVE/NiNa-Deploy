@@ -44,3 +44,8 @@ R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\obj\Release\net8.0-windows\NiNa-Deploy
 R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\obj\Release\net8.0-windows\NiNa-Deploy.genruntimeconfig.cache
 R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\obj\Release\net8.0-windows\ref\NiNa-Deploy.dll
 R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\Resources\AuthorInfo.txt
+R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\Resources\PsExec64.exe
+R:\4.Code_Repo\C#\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\Resources\Ninja.ico
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\Resources\Ninja.ico
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\Resources\AuthorInfo.txt
+C:\SourceCode\NiNa-Deploy\NiNa-Deploy\bin\Release\net8.0-windows\Resources\PsExec64.exe
